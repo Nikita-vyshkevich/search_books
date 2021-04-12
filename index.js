@@ -1,18 +1,43 @@
 const express = require('express');
-const calculate = require('./calculator');
-
+const calculator = require('./calculator');
+const bodyParser = require('body-parser')
 const server = express();
 
+server.use(bodyParser.json())
 server.get('/', function (req, res) {
   res.send('Server is working!');
 });
 
-server.put('/', (request, response) => {
-  const num1 = parseInt(request.query.num1,10)
-  const num2 = parseInt(request.query.num2,10)
-  const result = calculate(num1, num2);
+console.log(calculator.sum(12,24));
 
-  response.json(result);
+server.put('/', (request, response) => {
+
+  const operationType = request.query.operationType
+  const num1 = request.body.num1;
+  const num2 = request.body.num2;
+
+  if (operationType === "sum") {
+    const result = calculator.sum(num1,num2);
+    response.json(result)
+  }
+  else if (operationType === "devision") {
+    const result = calculator.devision(num1,num2)
+    response.json(result)
+  }
+  else  if (operationType === "multiplication") {
+    const result = calculator.multiplication(num1,num2)
+    response.json(result)
+  }
+  else  if (operationType === "subtraction") {
+    const result  = calculator.subtraction(num1,num2)
+    response.json(result)
+  }
+  else {
+    console.log("operation false")
+  }
+
+
+  response.json();
 });
 
 server.listen(3000, () => console.log('Server is working!'));
